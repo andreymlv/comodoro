@@ -12,10 +12,6 @@ options:
 	@echo "LDFLAGS  = ${LDFLAGS}"
 	@echo "CC       = ${CC}"
 
-.c.o:
-	@echo CC $<
-	@${CC} -c ${CFLAGS} $<
-
 ${OBJ}: config.mk
 
 clean:
