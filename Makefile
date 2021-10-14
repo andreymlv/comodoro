@@ -17,3 +17,6 @@ ${OBJ}: config.mk
 clean:
 	@echo cleaning
 	@rm -f comidoro ${OBJ}
+
+run: all
+	sudo ./comidoro 3 3 3

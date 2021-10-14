@@ -14,7 +14,7 @@ VERSION = 0.1
 
 # includes and libs
 #INCS = -I${X11INC} -I${FREETYPEINC}
-#LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS}
+LIBS = -lpthread
 
 # flags
 CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\"
@@ -23,4 +23,4 @@ CFLAGS   = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
 LDFLAGS  = ${LIBS}
 
 # compiler and linker
-CC = cc
+CC = gcc
