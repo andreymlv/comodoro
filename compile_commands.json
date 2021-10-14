@@ -1,0 +1,26 @@
+[
+    {
+        "arguments": [
+            "cc",
+            "-c",
+            "-g",
+            "-std=c99",
+            "-pedantic",
+            "-Wall",
+            "-O0",
+            "-D_DEFAULT_SOURCE",
+            "-D_BSD_SOURCE",
+            "-D_POSIX_C_SOURCE=200809L",
+            "-DVERSION=\"0.1\"",
+            "-D_DEFAULT_SOURCE",
+            "-D_BSD_SOURCE",
+            "-D_POSIX_C_SOURCE=200809L",
+            "-DVERSION=\"0.1\"",
+            "-o",
+            "comidoro.o",
+            "comidoro.c"
+        ],
+        "directory": "/home/andreymlv/GitHub/comidoro",
+        "file": "comidoro.c"
+    }
+]
