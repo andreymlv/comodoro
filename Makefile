@@ -25,3 +25,5 @@ clean:
 run: all
 	./comidoro 3 3 3
 
+check: ccls
+	cppcheck --clang --std=c11 .

@@ -4,7 +4,7 @@
             "cc",
             "-c",
             "-g",
-            "-std=c17",
+            "-std=c11",
             "-pedantic",
             "-Wall",
             "-O0",

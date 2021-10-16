@@ -18,8 +18,8 @@ LIBS = -lSDL2 -lSDL2_mixer
 
 # flags
 CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\"
-CFLAGS   = -g -std=c17 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
-#CFLAGS   = -std=c17 -pedantic -Wall -Wno-deprecated-declarations -O3  ${CPPFLAGS}
+CFLAGS   = -g -std=c11 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
+#CFLAGS   = -std=c11 -pedantic -Wall -Wno-deprecated-declarations -O3  ${CPPFLAGS}
 LDFLAGS  = ${LIBS}
 
 # compiler and linker
