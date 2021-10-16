@@ -10,13 +10,18 @@ options:
 	@echo comidoro build options:
 	@echo "CFLAGS   = ${CFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
-	@echo "CC       = ${CC}"
+	@echo "GCC      = ${GCC}"
+
+ccls: clean
+	intercept-build make all
 
 ${OBJ}: config.mk
 
 clean:
 	@echo cleaning
 	@rm -f comidoro ${OBJ}
+	@rm -f compile_commands.json 
 
 run: all
-	sudo ./comidoro 3 3 3
+	./comidoro 3 3 3
+

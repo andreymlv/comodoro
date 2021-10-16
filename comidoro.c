@@ -1,11 +1,9 @@
 /* MIT License Pomidoro Timer */
 
-#include <pthread.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-
-#define ESC 27 /* For beep function */
 
 enum {
   Started,
@@ -16,33 +14,25 @@ enum {
   LastState,
 };
 
-static void *beep(void *values);
-static void parse_command_line(int argc, char **argv);
+// Screen dimension constants
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 
+static void bell();
+static void parse_command_line(int argc, char **argv);
+static void init_sdl();
+static void finalize_sdl();
+
+// The window we'll be rendering to
+static SDL_Window *window = NULL;
+// The surface contained by the window
+static SDL_Surface *screenSurface = NULL;
 static int sections = 0;
 static int section_time = 0;
 static int relax_time = 0;
 static int state;
 
-static void *beep(void *time_to_sleep) {
-  FILE *tty;
-
-  if (NULL == (tty = fopen("/dev/console", "w"))) {
-    fprintf(stderr, "Cannot write to /dev/console!\n");
-    exit(1);
-  }
-
-  int *delay = (int *)time_to_sleep;
-
-  int frequency = 512;
-  int duration = 512;
-
-  fprintf(tty, "%c[10;%d]%c[11;%d]\a", ESC, frequency, ESC, duration);
-  printf("Beep! Delay: %d\n", *delay);
-  sleep(*delay);
-
-  return NULL;
-}
+static void bell() {}
 
 static void parse_command_line(int argc, char **argv) {
   if (argc != 4) {
@@ -55,6 +45,41 @@ static void parse_command_line(int argc, char **argv) {
   }
 }
 
+static void init_sdl() {
+  // Initialize SDL
+  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+  } else {
+    // Create window
+    window = SDL_CreateWindow("comidoro", SDL_WINDOWPOS_UNDEFINED,
+                              SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
+                              SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (window == NULL) {
+      printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+    } else {
+      // Get window surface
+      screenSurface = SDL_GetWindowSurface(window);
+
+      // Fill the surface white
+      SDL_FillRect(screenSurface, NULL,
+                   SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
+
+      // Update the surface
+      SDL_UpdateWindowSurface(window);
+
+      // Wait two seconds
+      SDL_Delay(2000);
+    }
+  }
+}
+
+static void finalize_sdl() {
+  // Destroy window
+  SDL_DestroyWindow(window);
+  // Quit SDL subsystems
+  SDL_Quit();
+}
+
 int main(int argc, char **argv) {
 
   parse_command_line(argc, argv);
@@ -62,12 +87,8 @@ int main(int argc, char **argv) {
   printf("sections - %d\ntime - %d\nrelax - %d\n", sections, section_time,
          relax_time);
 
-  for (int i = 0; i < sections; ++i) {
-    pthread_t threads;
-    sleep(1);
-    pthread_create(&threads, NULL, &beep, &i);
-    pthread_join(&threads, NULL);
-  }
+  init_sdl();
+  finalize_sdl();
 
   return 0;
 }

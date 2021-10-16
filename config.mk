@@ -14,13 +14,13 @@ VERSION = 0.1
 
 # includes and libs
 #INCS = -I${X11INC} -I${FREETYPEINC}
-LIBS = -lpthread
+LIBS = -lSDL2 -lSDL2_mixer
 
 # flags
 CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\"
-CFLAGS   = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
-#CFLAGS   = -std=c99 -pedantic -Wall -Wno-deprecated-declarations -Os  ${CPPFLAGS}
+CFLAGS   = -g -std=c17 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
+#CFLAGS   = -std=c17 -pedantic -Wall -Wno-deprecated-declarations -O3  ${CPPFLAGS}
 LDFLAGS  = ${LIBS}
 
 # compiler and linker
-CC = gcc
+CC = cc
