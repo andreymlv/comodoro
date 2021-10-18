@@ -10,7 +10,7 @@ options:
 	@echo comidoro build options:
 	@echo "CFLAGS   = ${CFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
-	@echo "GCC      = ${GCC}"
+	@echo "CC      = ${CC}"
 
 ccls: clean
 	intercept-build make all
@@ -26,4 +26,4 @@ run: all
 	./comidoro 3 3 3
 
 check: ccls
-	cppcheck --clang --std=c11 .
+	cppcheck --clang --std=c99 .

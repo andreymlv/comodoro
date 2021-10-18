@@ -1,8 +1,6 @@
 /* MIT License Pomidoro Timer */
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_mixer.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,25 +91,24 @@ static void poll_events() {
 
 static void main_loop() {
     while (!quit) {
-        poll_events();
-
         SDL_FillRect(screenSurface, NULL,
                      SDL_MapRGB(screenSurface->format, 0xBF, 0xCF, 0xAF));
         SDL_UpdateWindowSurface(window);
+
+        poll_events();
     }
 }
 
 static int make_window() {
     window = SDL_CreateWindow("comidoro", SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-                              SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+                              SCREEN_HEIGHT, SDL_WINDOW_VULKAN);
     if (window == NULL) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return -1;
     }
 
     screenSurface = SDL_GetWindowSurface(window);
-
     return 0;
 }
 
@@ -146,7 +143,10 @@ static void finalize_sdl() {
 }
 
 int main(int argc, const char **argv) {
-    parse_command_line(argc, argv);
+    if (parse_command_line(argc, argv)) {
+        printf("Arguments Error!\n");
+        return -1;
+    }
 
     printf("sections - %d\ntime - %d\nrelax - %d\n", sections, section_time,
            relax_time);
