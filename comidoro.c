@@ -19,12 +19,13 @@ enum {
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-static int bell();
 static int parse_command_line(int argc, const char **argv);
 static int load_media();
+static void poll_events();
+static void main_loop();
+static int make_window();
 static int init_sdl();
 static void finalize_sdl();
-static void start(int time, char **str);
 
 static int quit = 0;
 static SDL_Window *window = NULL;
@@ -35,8 +36,6 @@ static int sections = 0;
 static int section_time = 0;
 static int relax_time = 0;
 static int state = Started;
-
-static int bell() { return 0; }
 
 static int parse_command_line(int argc, const char **argv) {
     if (argc != 4) {
@@ -52,16 +51,68 @@ static int parse_command_line(int argc, const char **argv) {
 }
 
 static int load_media() {
-    int success = 0;
-
     gMusic = Mix_LoadMUS("bell.wav");
     if (gMusic == NULL) {
         printf("Failed to load beat music! SDL_mixer Error: %s\n",
                Mix_GetError());
-        success = -1;
+        return -1;
     }
 
-    return success;
+    return 0;
+}
+
+static void poll_events() {
+    while (SDL_PollEvent(&e) != 0) {
+        if (e.type == SDL_QUIT)
+            quit = 1;
+        else if (e.type == SDL_KEYDOWN) {
+            switch (e.key.keysym.sym) {
+                case SDLK_1:
+                    printf("1 - ");
+                    if (Mix_PlayingMusic() == 0) {
+                        printf("Play\n");
+                        Mix_PlayMusic(gMusic, -1);
+                    } else if (Mix_PausedMusic() == 1) {
+                        printf("Resume\n");
+                        Mix_ResumeMusic();
+                    } else {
+                        printf("Pause\n");
+                        Mix_PauseMusic();
+                    }
+                    break;
+                case SDLK_2:
+                    printf("2 - Halt\n");
+                    Mix_HaltMusic();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+}
+
+static void main_loop() {
+    while (!quit) {
+        poll_events();
+
+        SDL_FillRect(screenSurface, NULL,
+                     SDL_MapRGB(screenSurface->format, 0xBF, 0xCF, 0xAF));
+        SDL_UpdateWindowSurface(window);
+    }
+}
+
+static int make_window() {
+    window = SDL_CreateWindow("comidoro", SDL_WINDOWPOS_UNDEFINED,
+                              SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
+                              SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (window == NULL) {
+        printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    screenSurface = SDL_GetWindowSurface(window);
+
+    return 0;
 }
 
 static int init_sdl() {
@@ -76,59 +127,9 @@ static int init_sdl() {
         return -1;
     }
 
-    if (!load_media()) {
-        /*    int current_section = 0;
-            while (++current_section < sections) {
-                // start(section_time, "End of section! Relax time!");
-                // start(relax_time, "End of relax! Section time!");
-            }*/
-    } else {
+    if (load_media()) {
         printf("Load Media Error!\n");
         return -1;
-    }
-
-    window = SDL_CreateWindow("comidoro", SDL_WINDOWPOS_UNDEFINED,
-                              SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-                              SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (window == NULL) {
-        printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-        return -1;
-    }
-
-    screenSurface = SDL_GetWindowSurface(window);
-
-    while (!quit) {
-        while (SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT)
-                quit = 1;
-            else if (e.type == SDL_KEYDOWN) {
-                switch (e.key.keysym.sym) {
-                    case SDLK_1:
-                        printf("1 - ");
-                        if (Mix_PlayingMusic() == 0) {
-                            printf("Play\n");
-                            Mix_PlayMusic(gMusic, -1);
-                        } else if (Mix_PausedMusic() == 1) {
-                            printf("Resume\n");
-                            Mix_ResumeMusic();
-                        } else {
-                            printf("Pause\n");
-                            Mix_PauseMusic();
-                        }
-                        break;
-                    case SDLK_2:
-                        printf("2 - Halt\n");
-                        Mix_HaltMusic();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        SDL_FillRect(screenSurface, NULL,
-                     SDL_MapRGB(screenSurface->format, 0xBF, 0xCF, 0xAF));
-        SDL_UpdateWindowSurface(window);
     }
 
     return 0;
@@ -150,11 +151,17 @@ int main(int argc, const char **argv) {
     printf("sections - %d\ntime - %d\nrelax - %d\n", sections, section_time,
            relax_time);
 
-    if (!init_sdl()) {
-    } else {
+    if (init_sdl()) {
         printf("SDL Init Error!\n");
         return -1;
     }
+
+    if (make_window()) {
+        printf("Window Create Error!\n");
+        return -1;
+    }
+
+    main_loop();
 
     finalize_sdl();
 
