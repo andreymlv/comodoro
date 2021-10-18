@@ -2,7 +2,7 @@
 
 Pomidoro Timer in C language.
 
-Dependecies:
+Dependencies:
 
 - `SDL2` for gui
 - `SDL2_Mix` for audio
