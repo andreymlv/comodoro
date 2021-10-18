@@ -2,6 +2,11 @@
 
 Pomidoro Timer in C language.
 
+Dependecies:
+
+- `SDL2` for gui
+- `SDL2_Mix` for audio
+
 ## Compile and Usage
 
 To compile just:
@@ -10,9 +15,9 @@ To compile just:
 make
 ```
 
-To run need to sudo (because of beep):
+To run:
 
 ```
-sudo ./comidoro <number of sections> <time of each section> <relax time>
+./comidoro <number of sections> <time of each section> <relax time>
 ```
 
