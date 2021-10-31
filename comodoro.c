@@ -1,10 +1,16 @@
-/* MIT License Pomidoro Timer */
+/*
+ * MIT License
+ * Pomidoro Timer in C language using SDL2 library
+ */
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
+/* System headers */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+/* SDL2 headers */
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 #define CURRENT_TIME (SDL_GetTicks() / 1000)
 
@@ -19,21 +25,21 @@ typedef enum {
     Relax,
     WaitSection,
     WaitRelax
-} states;
-
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+} States;
 
 static int parse_command_line(int argc, const char *argv[]);
 static int load_media();
+static void play_or_pause_music();
+static void halt_music();
 static void render();
 static void poll_events();
 static void main_loop();
 static int make_window();
 static int init_sdl();
 static void finalize_sdl();
-static void play_or_pause_music();
-static void halt_music();
+
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 
 static int quit = 0;
 static SDL_Window *window = NULL;
@@ -68,6 +74,28 @@ static int load_media() {
         return -1;
     }
     return 0;
+}
+
+static void play_or_pause_music() {
+    if (Mix_PlayingMusic() == 0) {
+        state = Playing;
+        printf("Play\n");
+        Mix_PlayMusic(gMusic, -1);
+    } else if (Mix_PausedMusic() == 1) {
+        state = Resumed;
+        printf("Resume\n");
+        Mix_ResumeMusic();
+    } else {
+        state = Paused;
+        printf("Pause\n");
+        Mix_PauseMusic();
+    }
+}
+
+static void halt_music() {
+    state = Halted;
+    printf("Halt\n");
+    Mix_HaltMusic();
 }
 
 static void render() {
@@ -212,28 +240,6 @@ static void finalize_sdl() {
 
     Mix_Quit();
     SDL_Quit();
-}
-
-static void play_or_pause_music() {
-    if (Mix_PlayingMusic() == 0) {
-        state = Playing;
-        printf("Play\n");
-        Mix_PlayMusic(gMusic, -1);
-    } else if (Mix_PausedMusic() == 1) {
-        state = Resumed;
-        printf("Resume\n");
-        Mix_ResumeMusic();
-    } else {
-        state = Paused;
-        printf("Pause\n");
-        Mix_PauseMusic();
-    }
-}
-
-static void halt_music() {
-    state = Halted;
-    printf("Halt\n");
-    Mix_HaltMusic();
 }
 
 int main(int argc, const char *argv[]) {
