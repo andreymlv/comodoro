@@ -1,10 +1,10 @@
 
 include config.mk
 
-SRC = comidoro.c
+SRC = comodoro.c
 OBJ = ${SRC:.c=.o}
 
-all: options comidoro
+all: options comodoro
 
 options:
 	@echo comidoro build options:
@@ -23,7 +23,7 @@ clean:
 	@rm -f compile_commands.json 
 
 run: all
-	./comidoro 3 3 3
+	./comodoro 3 1 1
 
 check: ccls
 	cppcheck --clang --std=c17 .
