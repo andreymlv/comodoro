@@ -49,7 +49,7 @@ static int state = Sleeping;
 
 static int parse_command_line(int argc, const char *argv[]) {
     if (argc != 4) {
-        fprintf(stderr, "Usage: \ncomidoro <sections> <time> <relax>\n");
+        fprintf(stderr, "Usage: \ncomodoro <sections> <time> <relax>\n");
         return -1;
     }
 
@@ -172,7 +172,7 @@ static void main_loop() {
 }
 
 static int make_window() {
-    window = SDL_CreateWindow("comidoro", SDL_WINDOWPOS_UNDEFINED,
+    window = SDL_CreateWindow("comodoro", SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                               SCREEN_HEIGHT, SDL_WINDOW_VULKAN);
     if (window == NULL) {

@@ -1,6 +1,6 @@
-# comidoro
+# comodoro
 
-Pomidoro Timer in C language.
+Pomodoro Timer in C language.
 
 Dependencies:
 
@@ -18,6 +18,6 @@ make
 To run:
 
 ```
-./comidoro <number of sections> <time of each section> <relax time>
+./comodoro <number of sections> <time of each section> <relax time>
 ```
 
