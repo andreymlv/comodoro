@@ -3,7 +3,7 @@
         "arguments": [
             "cc",
             "-c",
-            "-std=c99",
+            "-std=c17",
             "-pedantic",
             "-Wall",
             "-Wno-deprecated-declarations",
